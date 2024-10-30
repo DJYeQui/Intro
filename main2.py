@@ -1,6 +1,9 @@
+import csv
+
 import chainlit as cl
-from bs4 import SoupStrainer
+import bs4
 from langchain import hub
+from langchain.document_loaders.parsers.html import bs4
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.documents import Document
@@ -15,6 +18,24 @@ load_dotenv()
 
 # Initialize the language model
 llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
+
+
+def web_search(url) -> Document:
+    # for web scrapping RAG datas
+    url = "https://people.ieu.edu.tr/tr/senemkumovametin"
+    loader = WebBaseLoader(
+        web_paths=(url),
+        bs_kwargs=dict(
+            parse_only=bs4.SoupStrainer("div", id = "short_cv")
+        ),
+    )
+    return Document(page_content=str(loader.load()))  # THIS FUNCTION HAS NOT TESTED YET
+
+def csv_file_reader(path) -> Document:
+    with open(path, "r") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            print(row)
 
 # Loading content from a text file
 with open('RAGInfo.txt', 'r', encoding='utf-8') as file:
