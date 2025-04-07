@@ -12,6 +12,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import OpenAIEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+import langchain_experimental
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -45,9 +46,7 @@ with open('RAGInfo.txt', 'r', encoding='utf-8') as file:
         Document(page_content="Fatih Anamasli Senem Hocanın asistanı olarak görev yapmaktadır."),
         Document(page_content="İzmir ekonomi öğrencisidir. Başarılı bir yazılımcı ve game designerdır. "
                               "Geçmişinde girişimcilik maceraları olmuştur ve şirketlerde ve vc lerde çalışmıltır."),
-        Document(page_content="I am someone who always tries to improve social skills and software knowledge. "
-                              "I have made it my goal to experience many different fields and expand my perspective with the information I have gained from those fields. "
-                              "I believe that experience in each different department will provide different abilities.")
+        Document(page_content="İzmir ekonomi üniversitesinde 32 akts ders almak için minimum 3.0 ortalama ypamak gerekir.")
     ]
 
 # Split the document into smaller chunks
@@ -55,7 +54,7 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200
 splits = text_splitter.split_documents(documentTXT)
 
 # Create a Chroma vectorstore from the documents
-vectorstore = Chroma.from_documents(documents=documentTXT, embedding=OpenAIEmbeddings())
+vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
 
 # Create a retriever
 retriever = vectorstore.as_retriever()

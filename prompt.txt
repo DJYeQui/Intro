@@ -1,16 +1,3 @@
-Total Cost (Toplam Maliyet) TotalCost = (EmployeeCount × (Salary + InsuranceCost) × ProjectDuration) + (StudioCost × ProjectDuration) + ProjectInternalCosts + MarketingBudget
-Net Revenue Per Sale (Satış Başına Net Gelir) NetRevenuePerSale = SalePrice × (1 - MarketCut) × (1 - TaxCost)
-Monthly Income Expectation (Aylık Gelir Beklentisi) MonthlyIncomeExpectation = MonthlySalesExpectation × SalePrice
-Monthly Income Expectation After Tax (Vergi Sonrası Aylık Gelir Beklentisi) MonthlyIncomeExpectationAfterTax = MonthlyIncomeExpectation × (1 - TaxCost) × (1 - MarketCut)
-Break-even Point (Başabaş Noktasına Ulaşmak İçin Gerekli Ay) BreakEvenMonths = TotalCost / MonthlyIncomeExpectationAfterTax
-(Eğer MonthlyIncomeExpectationAfterTax = 0 ise işlem geçersiz olur.)
-Total Income Expectation (Toplam Gelir Beklentisi)TotalIncomeExpectation = (TargetProfitRate + RiskFactor) × TotalCost
-Target Sale Number (Hedef Satış Sayısı) TargetSaleNumber = TotalIncomeExpectation / NetRevenuePerSale
-(Eğer NetRevenuePerSale ≤ 0 ise işlem geçersiz olur.)
-Total Wishlist (Toplam Wishlist Beklentisi)TotalWishlist = WishlistRate × TargetSaleNumber
-Months to Reach Goal (Hedefe Ulaşmak İçin Gerekli Süre) MonthsToReachGoal = TargetSaleNumber / MonthlySalesExpectation
-(Eğer MonthlySalesExpectation ≤ 0 ise işlem geçersiz olur.)
-
 Prompt: Game Project Evaluation and Recommendation Assistant
 You are an AI assistant designed to evaluate game projects based on financial and operational data. Your goal is to analyze the provided data, assess the project's potential and risks, and offer insightful recommendations.
 

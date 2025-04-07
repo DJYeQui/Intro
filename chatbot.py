@@ -13,35 +13,32 @@ import pandas as pd
 import PyPDF2
 
 load_dotenv()
+
 llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
-documentTXT = []
 
+# Load, chunk and index the contents of the blog.
+# for web scrapping RAG datas
+"""loader = WebBaseLoader(
+    web_paths=("https://people.ieu.edu.tr/tr/senemkumovametin",),
+    bs_kwargs=dict(
+        parse_only=bs4.SoupStrainer("div", id = "short_cv")
+    ),
+)
+docs = loader.load()
+print(docs)"""
+DocumentTXT = []
+# for txt read
+with open('2024-2025 Eğitim-Öğretim Yılı Hafızlık Eğitimi Kursları Uygulama Esasları.txt', 'r', encoding='utf-8') as file:
+    content = file.read()
 
-def read_pdf(file_path):
-    try:
-        # PDF dosyasını aç
-        with open(file_path, 'rb') as pdf_file:
-            # PDF Reader oluştur
-            reader = PyPDF2.PdfReader(pdf_file)
-
-            # Toplam sayfa sayısını yazdır
-            print(f"PDF toplam sayfa sayısı: {len(reader.pages)}\n")
-
-            # Her sayfanın içeriğini yazdır
-            for page_number, page in enumerate(reader.pages):
-                if 5 <= page_number <= 7:
-                    documentTXT.append(Document(page_content=page.extract_text()))
-
-            print("pdf read the end")
-    except FileNotFoundError:
-        print("Belirtilen dosya bulunamadı. Lütfen dosya yolunu kontrol edin.")
-    except Exception as e:
-        print(f"Bir hata oluştu: {e}")
-
-
-read_pdf('D:\\GitDeskopProject\\RAGIntro\\_UK_AI_Opportunities_Action_Plan—_1736861556.pdf')
-
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=250)
+    documentTXT = [Document(page_content=content),
+                   Document(page_content="Fatih Anamasli Senem Hocanın asistanı olarak görev yapmaktadır."),
+                   Document(
+                       page_content="İzmir ekonomi üniversitesinde 32 akts ders "
+                                    "almak için minimum 3.0 ortalama ypamak gerekir."),
+                   Document(
+                       page_content="")]
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=300)
 splits = text_splitter.split_documents(documentTXT)
 vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
 
@@ -52,13 +49,13 @@ prompt = hub.pull("rlm/rag-prompt")
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 
-
 rag_chain = (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
         | prompt
         | llm
         | StrOutputParser()
 )
+
 
 if __name__ == "__main__":
     while True:
